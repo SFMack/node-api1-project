@@ -1,4 +1,5 @@
 const express = require("express");
+const shortId = require("shortid");
 
 const server = express();
 
@@ -29,6 +30,7 @@ server.post("/api/users", (req, res) => {
       error,
     });
   } else {
+    newUser.id = shortId.generate();
     users.push(newUser);
     res.status(201).json({ message: "Your new user was created" });
   }
@@ -37,11 +39,25 @@ server.post("/api/users", (req, res) => {
 // get user by id
 server.get("/api/users/:id", (req, res) => {
   const foundUser = users.filter(user => user.id == req.params.id);
-  res.status(201).json(foundUser);
+  if (foundUser) {
+    res.status(201).json(foundUser);
+  } else {
+    res.status(404).json({ message: "User not found" });
+  }
 });
 
 // delete user by id
-server.delete("/api/users/:id", (req, res) => {});
+server.delete("/api/users/:id", (req, res) => {
+  const { id } = req.params;
+
+  const foundUserToDelete = users.find(user => user.id == id);
+  if (foundUserToDelete) {
+    users = users.filter(user => user.id !== foundUserToDelete.id);
+    res.status(200).json(foundUserToDelete);
+  } else {
+    res.status(404).json({ message: "Page does not exist" });
+  }
+});
 
 // update user by id
 server.patch("/api/users/:id", (req, res) => {});
