@@ -34,13 +34,19 @@ server.post("/api/users", (req, res) => {
   }
 });
 
-// get a specific user by id
-server.get("/api/users/:id", (req, res) => {});
+// get user by id
+server.get("/api/users/:id", (req, res) => {
+  const foundUser = users.filter(user => user.id == req.params.id);
+  res.status(201).json(foundUser);
+});
 
+// delete user by id
 server.delete("/api/users/:id", (req, res) => {});
 
+// update user by id
 server.patch("/api/users/:id", (req, res) => {});
 
+// start server
 server.listen(PORT, () => {
   console.log(`Server running on port ${PORT}`);
 });
