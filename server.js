@@ -38,11 +38,13 @@ server.post("/api/users", (req, res) => {
 
 // get user by id
 server.get("/api/users/:id", (req, res) => {
-  const foundUser = users.filter(user => user.id == req.params.id);
+  const { id } = req.params;
+  const foundUser = users.find(user => user.id == id);
   if (foundUser) {
+    users = users.filter(user => user.id == req.params.id);
     res.status(201).json(foundUser);
   } else {
-    res.status(404).json({ message: "User not found" });
+    res.status(404).send({ message: "User not found" });
   }
 });
 
@@ -55,7 +57,7 @@ server.delete("/api/users/:id", (req, res) => {
     users = users.filter(user => user.id !== foundUserToDelete.id);
     res.status(200).json(foundUserToDelete);
   } else {
-    res.status(404).json({ message: "Page does not exist" });
+    res.status(404).send({ message: "User does not exist" });
   }
 });
 
