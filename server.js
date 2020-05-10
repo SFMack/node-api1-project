@@ -1,5 +1,6 @@
 const express = require("express");
 const shortId = require("shortid");
+const cors = require("cors");
 
 const server = express();
 
@@ -8,6 +9,7 @@ server.use(express.json());
 const PORT = 4000;
 
 server.use(express());
+server.use(cors());
 
 let users = [
   { id: 0, name: "Christian", bio: "Here is Christian's biography" },
@@ -62,7 +64,20 @@ server.delete("/api/users/:id", (req, res) => {
 });
 
 // update user by id
-server.patch("/api/users/:id", (req, res) => {});
+server.put("/api/users/:id", (req, res) => {
+  const { id } = req.params;
+  const changes = req.body;
+
+  let userIndex = users.findIndex(user => user.id == id);
+
+  if (userIndex !== -1) {
+    changes.id = id;
+    users[userIndex] = changes;
+    res.status(200).json(users[userIndex]);
+  } else {
+    res.status(404).json({ message: "User not found" });
+  }
+});
 
 // start server
 server.listen(PORT, () => {
