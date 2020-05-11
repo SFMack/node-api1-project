@@ -25,7 +25,6 @@ server.get("/api/users", (req, res) => {
 // create a user and add to "database"
 server.post("/api/users", (req, res) => {
   const newUser = req.body;
-  console.log(newUser);
   if (!req.body.name || !req.body.bio) {
     res.status(400).json({
       errorMessage: "Please provide a name and bio for the user.",
